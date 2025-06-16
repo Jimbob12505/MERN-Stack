@@ -3,11 +3,24 @@ import Note from "../models/Note.js";
 export async function getNotes(req, res) {
 
   try {
-    const notes = await Note.find({}); // find all Note 
+    const notes = await Note.find({}).sort({createdAt:-1}); // find all Note 
     res.status(200).json(notes);  
   } catch (error) {
     console.error("ERROR! FAILED TO RETRIEVE ALL NOTES", error);
     res.status(500).json({message: "Failure to retrieve all notes"}); 
+  }
+
+}
+
+export async function getNoteById(req, res) {
+
+  try {
+    const note = await Note.findById(req.params.id);
+    if(!note) return res.status(404).json({message:"Note not found"});
+    res.status(200).json(note); 
+  } catch (error) {
+    console.error("ERROR! FAILED TO RETRIEVE NOTE BY ID", error);
+    res.status(500).json({message: "Failure to retrieve note by id"}); 
   }
 
 }
